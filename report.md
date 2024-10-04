@@ -16,7 +16,7 @@ Bichuan Liu
 Disparity estimation calculates the pixel difference from the right image by making different offsets to the left image, and selects the offset with the least error as the best disparity value for each pixel. The specific steps are as follows:
 
 1. **Offset scanning:** For each pixel, the code calculates the pixel difference between the left image and the right image by a different offset. 
-2. **Square error calculation: **For each offset, calculate the square error of the left and right image pixels, and store the results.
+2. **Square error calculation:** For each offset, calculate the square error of the left and right image pixels, and store the results.
 ```python
 for offset in range(maxoffset):
     diff = im1[0, :, 0:cols-maxoffset, :] - im0[0, :, offset:cols-maxoffset+offset, :]
@@ -25,15 +25,14 @@ for offset in range(maxoffset):
 ```  
 3. **Convolutional window smoothing:** The convolutional window is used for weighted summation of errors to consider the influence of neighboring pixels and reduce noise.
 4. **Best disparity selection:** Find the offset with the smallest error through the argmin() function as the best disparity value.
+5. **Accuracy** **calculation**
 
 The process effectively smooths out the disparity estimation and ultimately finds the best disparity for each pixel.
 ![alt text](image-1.png)
 ### 1.4  Description of the errors
 In the experiment, we compared the estimated disparity with the ground truth disparity, and the analysis error is as follows:
-1. **Visual Differences:**
-**Noise in low-texture areas**: In low-texture areas such as the ground and walls, more noise appears in the estimated disparity map.
-**Object edge blur**: The estimated disparity at the edges of backpacks and other objects shows blur, indicating difficulty in estimating disparity at object boundaries.
-**Occlusion area problem**: On the part of the background obscured by the backpack, the disparity estimate cannot be accurately matched, resulting in black areas.
+1. **Errors term in Disparity code:**
+The **error calculated in the code** is the square of the difference between the pixels in the left and right images, describing how well each pixel matches in the two images. The **greater the error**, the **higher** the degree of **inaccuracy** in parallax **matching**.
 2. **Quantitative analysis:**
 The error between the estimated disparity and the ground truth is calculated using an error threshold of 2.5 pixels. The accuracy rate is 56.41%, indicating that about 56.41% of the pixel errors are less than 2.5 pixels.
 ```
@@ -44,3 +43,33 @@ The error between the estimated disparity and the ground truth is calculated usi
 **Low texture areas:** In areas without significant features (such as walls and floors), disparity estimation is not accurate.
 **Object boundaries:** Due to the large variation in depth at object boundaries, disparity estimation is often inaccurate.
 
+## 2.Effect of window size
+### 2.1 Results
+| Halfwin Size | Scale 4 Accuracy (%) | Scale 2 Accuracy (%) |
+|--------------|----------------------|----------------------|
+| 1            | 41.48%               | 24.30%               |
+| 2            | 56.41%               | 36.85%               |
+| 3            | 64.17%               | 47.24%               |
+| 4            | 67.92%               | 54.15%               |
+| 5            | 69.76%               | 58.23%               |
+| 10           | 71.99%               | 63.01%               |
+| 15           | 71.50%               | 63.36%               |
+| 20           | 69.79%               | 62.93%               |
+### 2.2 Analysis
+#### 2.2.1 Quantitatively
+
+#### 2.2.2 Qualitatively
+
+## 3.Centre weighted window
+### 3.1 Results
+
+### 3.2 Analysis
+#### 3.2.1 Quantitatively
+#### 3.2.2 Qualitatively
+
+## 4.Obtain performance across the whole dataset
+### 4.1 Results
+
+### 4.2 Analysis
+#### 4.2.1 Quantitatively
+#### 4.2.2 Qualitatively
